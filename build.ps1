@@ -1,4 +1,8 @@
-param ([string]$RAKUDO_VER, [switch]$checksum, [switch]$sign)
+param (
+	[Parameter(Mandatory=$True)][string]$RAKUDO_VER,
+	[switch]$checksum,
+	[switch]$sign
+)
 
 # Download Rakudo and build
 $progresspreference = 'silentlyContinue'
