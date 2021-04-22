@@ -1,4 +1,4 @@
-param ([string]$RAKUDO_VER, [switch]$sign)
+param ([string]$RAKUDO_VER, [switch]$sign, [switch]$keep)
 
 #
 # inspired by https://github.com/hankache/rakudo-star-win/blob/master/build.ps1
@@ -65,7 +65,7 @@ IF ( -NOT ($RAKUDO_VER) ) {
 }
 
 Write-Host "   INFO - Cloning `"https://github.com/rakudo/rakudo.git`"..."
-& git clone --single-branch -b $RAKUDO_VER "https://github.com/rakudo/rakudo.git" rakudo-$RAKUDO_VER | Out-Null
+& git.exe clone --quiet --single-branch -b $RAKUDO_VER "https://github.com/rakudo/rakudo.git" rakudo-$RAKUDO_VER | Out-Null
 cd rakudo-$RAKUDO_VER
 
 
@@ -79,7 +79,7 @@ nmake install
 
 # Download Zef and install
 Write-Host "   INFO - Cloning `"https://github.com/ugexe/zef.git`"..."
-& git.exe clone https://github.com/ugexe/zef.git
+& git.exe clone --quiet https://github.com/ugexe/zef.git
 cd zef
 Write-Host "   INFO - Installing ZEF"
 & $PrefixPath\bin\raku.exe -I. bin\zef install . --install-to=$PrefixPath\share\perl6\site\
@@ -100,8 +100,6 @@ Select-String -Path rakudo-star-modules.txt -Pattern " http "," git " -SimpleMat
   }
 }
 
-cd ../..
-
 $LibWinPThread = (Join-Path (Split-Path (Get-Command perl).Path) libwinpthread-1.dll)
  $LibGcc_S_Seh = (Join-Path (Split-Path (Get-Command perl).Path) libgcc_s_seh-1.dll)
 IF (Test-Path -Path $LibGcc_S_Seh) {
@@ -112,6 +110,7 @@ IF (Test-Path -Path $LibGcc_S_Seh) {
 
 
 Write-Host "   INFO - Creating the .msi Package"
+cd $ScriptRoot
 IF ( !(Test-Path -Path output )) { New-Item -ItemType directory -Path output }
 & heat dir $PrefixPath\bin -dr DIR_BIN -cg FilesBin -gg -g1 -sfrag -srd -suid -ke -sw5150 -var "var.BinDir" -out files-bin.wxs
 & heat dir $PrefixPath\include -dr DIR_INCLUDE -cg FilesInclude -gg -g1 -sfrag -srd -ke -sw5150 -var "var.IncludeDir" -out files-include.wxs
@@ -132,9 +131,12 @@ IF ($sign) {
 	& gpg --armor --detach-sig "output\rakudo-star-$RAKUDO_VER-win-x86_64-(JIT).msi"
 }
 
-Write-Host "   INFO - Cleaning up..."
-Remove-Item files-*.wxs, *.wixobj, "output\rakudo-star-${RAKUDO_VER}-win-x86_64-(JIT).wixpdb"
-Remove-Item -Recurse -Force "rakudo-${RAKUDO_VER}"
-Remove-Item -Recurse -Force $PrefixPath
-Write-Host "   INFO - ALL done in dir `"", (pwd).Path, "`""
+IF ( ! $keep ) {
+  Write-Host "   INFO - Cleaning up..."
+  Remove-Item files-*.wxs, *.wixobj, "output\rakudo-star-${RAKUDO_VER}-win-x86_64-(JIT).wixpdb"
+  Remove-Item -Recurse -Force "rakudo-${RAKUDO_VER}"
+  Remove-Item -Recurse -Force $PrefixPath
+  Write-Host "   INFO - ALL done in dir `"", (pwd).Path, "`""
+}
+
 $Env:Path = $orgEnvPath
