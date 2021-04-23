@@ -6,14 +6,8 @@ param ([string]$RAKUDO_VER, [switch]$sign, [switch]$keep)
 # if none is given, we will try to get the "latest" from gihub
 #
 
-Try
-{
-    $ScriptRoot = Split-Path -Parent $PSScriptRoot
-}
-Catch
-{
-    $ScriptRoot = Get-Location
-}
+IF ( $PSScriptRoot ) { $ScriptRoot = $PSScriptRoot} ELSE { $ScriptRoot = Get-Location }
+Write-Host "   INFO - `"`$ScriptRoot`" set to `"$ScriptRoot`""
 
 
 IF ( -NOT ((Get-Command "cl.exe" -ErrorAction SilentlyContinue).Path) ) {
