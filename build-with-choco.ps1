@@ -65,7 +65,7 @@ IF ( -NOT ($RAKUDO_VER) ) {
 }
 
 Write-Host "   INFO - Cloning `"https://github.com/rakudo/rakudo.git`"..."
-& git-exe clone --quiet --single-branch -b $RAKUDO_VER "https://github.com/rakudo/rakudo.git" rakudo-$RAKUDO_VER | Out-Null
+& git.exe clone --quiet --single-branch -b $RAKUDO_VER "https://github.com/rakudo/rakudo.git" rakudo-$RAKUDO_VER | Out-Null
 cd rakudo-$RAKUDO_VER
 
 
