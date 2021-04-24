@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Run the build-with-choco.ps1 script
         shell: pwsh
-        run: build-with-choco.ps1
+        run: pwsh -command ".\$GITHUB_WORKSPACE\build-with-choco.ps1"
       
       - name: Upload output artifacts
         uses: actions/upload-artifact@v2
