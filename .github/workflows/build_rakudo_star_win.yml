@@ -17,10 +17,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.0.2
-        with:
-          vs-version: 16.9
+      - name: Setup VS Dev Environment
+        uses: seanmiddleditch/gha-setup-vsdevenv@v3
       - name: Run the build-with-choco.ps1 script
         shell: pwsh
         run: pwsh -command ".\$GITHUB_WORKSPACE\build-with-choco.ps1"
