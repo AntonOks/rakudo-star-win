@@ -19,3 +19,4 @@ jobs:
       - name: Show WixToolSet Path
         run: |
           (Get-Command "heat.exe" -ErrorAction Break).Path
+          ls C:\ProgramData\chocolatey\bin
