@@ -4,7 +4,7 @@ name: Test scoop
 
 # Controls when the action will run.
 # Triggers the workflow on push requests, new tag's or branches
-on:  push
+on:  create
 #[push, create]
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -19,7 +19,7 @@ jobs:
           iwr -useb get.scoop.sh | iex
       - name: Install WixToolSet with scoop
         run: |
-          scoop install wixtoolset
+          & scoop install wixtoolset
       - name: Show WixToolSet Path
         run: |
           (Get-Command "heat.exe" -ErrorAction Break).Path
