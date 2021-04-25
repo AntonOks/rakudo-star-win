@@ -16,18 +16,17 @@ jobs:
     steps:
       - name: Force the wixtoolset installation
         run: |
-          choco install --yes --force --degub --no-progress --limit-output --timeout 0 wixtoolset
-          Get-Content C:\ProgramData\chocolatey\logs\chocolatey.log
+          choco install --yes --force --no-progress --timeout 0 wixtoolset
+      - name: Update the $env:PATH (shuoldn't this be done by choco install???)
+        run: |
+          $env:Path = "C:\Program Files (x86)\WiX Toolset v3.11\bin;$env:Path"
       - name: Show WixToolSet Path
         run: |
           (Get-Command "heat.exe" -ErrorAction Break).Path
-          ls C:\ProgramData\chocolatey\bin
       - name: Try the choco action
         uses: crazy-max/ghaction-chocolatey@v1
         with:
-          args: install --yes --force --degub --no-progress --limit-output --timeout 0 wixtoolset
+          args: install --yes --force --no-progress --limit-output --timeout 0 wixtoolset
       - name: Show WixToolSet Path again
         run: |
           (Get-Command "heat.exe" -ErrorAction Break).Path
-          ls C:\ProgramData\chocolatey\bin
-          Get-Content C:\ProgramData\chocolatey\logs\chocolatey.log
