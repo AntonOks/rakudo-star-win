@@ -3,8 +3,9 @@
 name: Build Rakudo Star for Windows
 
 # Controls when the action will run.
-# Triggers the workflow on push requests, new tag or branch
-on: [push, create]
+# Triggers the workflow on push requests, new tag's or branches
+on: 
+#  [push, create]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -13,16 +14,15 @@ jobs:
     # Windows-latest has almost all reuirements to build rakudo-start-win
     # The only dependeny we need to install is the wixtoolset. We will use choco to do this
     runs-on: windows-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Setup VS Dev Environment
         uses: seanmiddleditch/gha-setup-vsdevenv@v3
+      - name: Force the wixtoolset installation
+        run: choco install --yes --force --degub wixtoolset
       - name: Run the build-with-choco.ps1 script
-        shell: pwsh
         run: pwsh -command ".\$GITHUB_WORKSPACE\build-with-choco.ps1"
-      
       - name: Upload output artifacts
         uses: actions/upload-artifact@v2
         with:
