@@ -40,11 +40,11 @@ IF ((( & cl /v 2>&1 | Select-String "^Microsoft .+ Compiler Version .+ for") -ma
 Write-Host "   INFO - Checking all prerequisites (choco, git, perl5, WiX toolset, gpg) and installing them, if required"
 IF ( -NOT ((Get-Command "choco" -ErrorAction SilentlyContinue).Path) ) { iex (New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1') }
 # Now install all prerequisites to build NQP, Moar and finally Rakudo
-IF (  -NOT ((Get-Command  "git.exe" -ErrorAction SilentlyContinue).Path) ) { & choco install -y git }
-IF (  -NOT ((Get-Command  "curl.exe" -ErrorAction SilentlyContinue).Path) ) { & choco install -y curl }
-IF (  -NOT ((Get-Command "perl.exe" -ErrorAction SilentlyContinue).Path) ) { & choco install -y perl }
-IF ( (-NOT ((Get-Command "heat.exe" -ErrorAction SilentlyContinue).Path)) -OR (-NOT ((Get-Command "candle.exe" -ErrorAction SilentlyContinue).Path)) ) { & choco install --yes --force --debug wixtoolset }
-IF ( ($sign) -AND ( -NOT ((Get-Command "gpg.exe" -ErrorAction SilentlyContinue).Path) ) ) { & choco install -y gpg4win-vanilla }
+IF (  -NOT ((Get-Command  "git.exe" -ErrorAction SilentlyContinue).Path) ) { & choco install --yes --force --no-progress --timeout 0 git }
+IF (  -NOT ((Get-Command  "curl.exe" -ErrorAction SilentlyContinue).Path) ) { & choco install --yes --force --no-progress --timeout 0 curl }
+IF (  -NOT ((Get-Command "perl.exe" -ErrorAction SilentlyContinue).Path) ) { & choco install --yes --force --no-progress --timeout 0 perl }
+IF ( (-NOT ((Get-Command "heat.exe" -ErrorAction SilentlyContinue).Path)) -OR (-NOT ((Get-Command "candle.exe" -ErrorAction SilentlyContinue).Path)) ) { & choco install --yes --force --no-progress --timeout 0 wixtoolset }
+IF ( ($sign) -AND ( -NOT ((Get-Command "gpg.exe" -ErrorAction SilentlyContinue).Path) ) ) { & choco install --yes --force --no-progress --timeout 0 gpg4win-vanilla }
 
 # If no Rakudo release is given, build the latest from github
 IF ( -NOT ($RAKUDO_VER) ) {
@@ -108,12 +108,13 @@ IF (Test-Path -Path $LibGcc_S_Seh) {
 Write-Host "   INFO - Creating the .msi Package"
 cd $ScriptRoot
 IF ( !(Test-Path -Path output )) { New-Item -ItemType directory -Path output }
-& heat dir $PrefixPath\bin -dr DIR_BIN -cg FilesBin -gg -g1 -sfrag -srd -suid -ke -sw5150 -var "var.BinDir" -out files-bin.wxs
-& heat dir $PrefixPath\include -dr DIR_INCLUDE -cg FilesInclude -gg -g1 -sfrag -srd -ke -sw5150 -var "var.IncludeDir" -out files-include.wxs
-& heat dir $PrefixPath\share -dr DIR_SHARE -cg FilesShare -gg -g1 -sfrag -srd -ke -sw5150 -var "var.ShareDir" -out files-share.wxs
-& candle files-bin.wxs files-include.wxs files-share.wxs -dBinDir="$PrefixPath\bin" -dIncludeDir="$PrefixPath\include" -dShareDir="$PrefixPath\share"
-& candle star.wxs -dSTARVERSION="$RAKUDO_VER"
-& light -b $PrefixPath -ext WixUIExtension files-bin.wixobj files-include.wixobj files-share.wixobj star.wixobj -sw1076 -o "output\rakudo-star-$RAKUDO_VER-win-x86_64-(JIT).msi"
+$Wixtoolpath = [Environment]::GetEnvironmentVariable('WIX', 'Machine') + "bin"
+& $Wixtoolpath\heat.exe dir $PrefixPath\bin -dr DIR_BIN -cg FilesBin -gg -g1 -sfrag -srd -suid -ke -sw5150 -var "var.BinDir" -out files-bin.wxs
+& $Wixtoolpath\heat.exe dir $PrefixPath\include -dr DIR_INCLUDE -cg FilesInclude -gg -g1 -sfrag -srd -ke -sw5150 -var "var.IncludeDir" -out files-include.wxs
+& $Wixtoolpath\heat.exe dir $PrefixPath\share -dr DIR_SHARE -cg FilesShare -gg -g1 -sfrag -srd -ke -sw5150 -var "var.ShareDir" -out files-share.wxs
+& $Wixtoolpath\candle.exe files-bin.wxs files-include.wxs files-share.wxs -dBinDir="$PrefixPath\bin" -dIncludeDir="$PrefixPath\include" -dShareDir="$PrefixPath\share"
+& $Wixtoolpath\candle.exe star.wxs -dSTARVERSION="$RAKUDO_VER"
+& $Wixtoolpath\light.exe -b $PrefixPath -ext WixUIExtension files-bin.wixobj files-include.wixobj files-share.wixobj star.wixobj -sw1076 -o "output\rakudo-star-$RAKUDO_VER-win-x86_64-(JIT).msi"
 Write-Host "   INFO - .msi Package `"output\rakudo-star-$RAKUDO_VER-win-x86_64-(JIT).msi`" created"
 
 # SHA256, create a hash sum 
