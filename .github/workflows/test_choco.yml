@@ -22,8 +22,8 @@ jobs:
           ls C:\ProgramData\chocolatey\bin
       - name: Try the choco action
         uses: crazy-max/ghaction-chocolatey@v1
-          with:
-            args: install --yes --force --degub --no-progress --limit-output --timeout 0 wixtoolset
+        with:
+          args: install --yes --force --degub --no-progress --limit-output --timeout 0 wixtoolset
       - name: Show WixToolSet Path again
         run: |
           (Get-Command "heat.exe" -ErrorAction Break).Path
