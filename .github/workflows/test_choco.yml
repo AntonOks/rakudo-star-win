@@ -15,7 +15,9 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Force the wixtoolset installation
-        run: choco install --yes --force --degub --no-progress --limit-output --timeout 0 wixtoolset
+        run: |
+          choco install --yes --force --degub --no-progress --limit-output --timeout 0 wixtoolset
+          Get-Content C:\ProgramData\chocolatey\logs\chocolatey.log
       - name: Show WixToolSet Path
         run: |
           (Get-Command "heat.exe" -ErrorAction Break).Path
@@ -28,3 +30,4 @@ jobs:
         run: |
           (Get-Command "heat.exe" -ErrorAction Break).Path
           ls C:\ProgramData\chocolatey\bin
+          Get-Content C:\ProgramData\chocolatey\logs\chocolatey.log
