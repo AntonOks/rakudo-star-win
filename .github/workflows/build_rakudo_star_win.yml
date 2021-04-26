@@ -29,4 +29,9 @@ jobs:
           name: Upload output dirctory
           path: output/
           if-no-files-found: error
+      - name: Release Rakudo Star - Windows
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: output/*
           
