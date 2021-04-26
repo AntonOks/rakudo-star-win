@@ -59,7 +59,7 @@ IF ( -NOT ($RAKUDO_VER) ) {
 }
 
 Write-Host "   INFO - Cloning `"https://github.com/rakudo/rakudo.git`"..."
-& git.exe clone --quiet --single-branch -b $RAKUDO_VER "https://github.com/rakudo/rakudo.git" rakudo-$RAKUDO_VER | Out-Null
+& git.exe -c advice.detachedHead=false clone --quiet --single-branch -b $RAKUDO_VER "https://github.com/rakudo/rakudo.git" rakudo-$RAKUDO_VER | Out-Null
 cd rakudo-$RAKUDO_VER
 
 
@@ -76,7 +76,7 @@ Write-Host "   INFO - Cloning `"https://github.com/ugexe/zef.git`"..."
 & git.exe clone --quiet https://github.com/ugexe/zef.git
 cd zef
 Write-Host "   INFO - Installing ZEF"
-& $PrefixPath\bin\raku.exe -I. bin\zef install . --install-to=$PrefixPath\share\perl6\site\
+& $PrefixPath\bin\raku.exe -I. bin\zef install . --install-to=$PrefixPath\share\perl6\site\ --error
 
 # Add the required rakudo folders to PATH in order for some modules to test correctly (File::Which)
 Write-Host "   INFO - Changing the %PATH% variable"
@@ -90,7 +90,7 @@ Select-String -Path rakudo-star-modules.txt -Pattern " http "," git " -SimpleMat
   $moduleName = $moduleName.replace("-","::")
   Write-Host "   INFO - zef: installing $moduleName, $moduleUrl"
   IF ( $moduleName -ne "zef" ) {
-    IF ( [string]( & zef install $moduleName --install-to=$PrefixPath\share\perl6\site\ ) -match 'No candidates found matching identity' ) { & zef install $moduleUrl --install-to=$PrefixPath\share\perl6\site\ }
+    IF ( [string]( & zef install $moduleName --install-to=$PrefixPath\share\perl6\site\ --error ) -match 'No candidates found matching identity' ) { & zef install $moduleUrl --install-to=$PrefixPath\share\perl6\site\ --error }
   }
 }
 
@@ -107,7 +107,7 @@ IF (Test-Path -Path $LibGcc_S_Seh) {
 
 Write-Host "   INFO - Creating the .msi Package"
 cd $ScriptRoot
-IF ( !(Test-Path -Path output )) { New-Item -ItemType directory -Path output }
+IF ( !(Test-Path -Path output )) { New-Item -ItemType directory -Path output | Out-Null }
 $Wixtoolpath = [Environment]::GetEnvironmentVariable('WIX', 'Machine') + "bin"
 & $Wixtoolpath\heat.exe dir $PrefixPath\bin -dr DIR_BIN -cg FilesBin -gg -g1 -sfrag -srd -suid -ke -sw5150 -var "var.BinDir" -out files-bin.wxs
 & $Wixtoolpath\heat.exe dir $PrefixPath\include -dr DIR_INCLUDE -cg FilesInclude -gg -g1 -sfrag -srd -ke -sw5150 -var "var.IncludeDir" -out files-include.wxs
