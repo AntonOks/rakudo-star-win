@@ -4,7 +4,7 @@ name: Build Rakudo Star for Windows
 
 # Controls when the action will run.
 # Triggers the workflow on push requests, new tag's or branches [with create] 
-on: create
+on: workflow_dispatch
 #  [push, create]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
