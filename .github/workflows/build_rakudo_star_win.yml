@@ -20,7 +20,7 @@ jobs:
       - name: Setup VS Dev Environment
         uses: seanmiddleditch/gha-setup-vsdevenv@v3
       - name: Force the wixtoolset installation
-        run: choco install --yes --force wixtoolset
+        run: choco install --yes --force --no-progress --limit-output --timeout 0 wixtoolset
       - name: Run the build-with-choco.ps1 script
         run: pwsh -command ".\$GITHUB_WORKSPACE\build-with-choco.ps1"
       - name: Upload output artifacts
@@ -32,6 +32,8 @@ jobs:
       - name: Release Rakudo Star - Windows
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
+        #TODO: delete "name:" after test to match the TAG version
+        name: 2021.04
         with:
           files: output/*
         env:
