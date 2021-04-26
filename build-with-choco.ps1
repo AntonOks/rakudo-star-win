@@ -66,10 +66,13 @@ cd rakudo-$RAKUDO_VER
 $PrefixPath = $env:Temp + "\rakudo-star-$RAKUDO_VER"
 Write-Host "   INFO - `"`$PrefixPath`" set to $PrefixPath"
 Write-Host "   INFO - Building NQP, Moar and Rakudo $RAKUDO_VER"
-perl Configure.pl --backends=moar --gen-moar --gen-nqp --moar-option='--toolchain=msvc' --relocatable --prefix=$PrefixPath
-nmake
-# nmake test
-nmake install
+perl Configure.pl --backends=moar --gen-moar --gen-nqp --moar-option='--toolchain=msvc' --relocatable --prefix=$PrefixPath --out=RAKUDO-${RAKUDO_VER}_build.log
+
+# see https://docs.microsoft.com/en-us/cpp/build/reference/running-nmake
+## /C => Suppresses default output, including nonfatal NMAKE errors or warnings, timestamps, and NMAKE copyright message. Suppresses warnings issued by /K
+nmake /C
+# nmake /C test
+nmake /C install
 
 # Download Zef and install
 Write-Host "   INFO - Cloning `"https://github.com/ugexe/zef.git`"..."
@@ -133,6 +136,7 @@ IF ( ! $keep ) {
   Remove-Item files-*.wxs, *.wixobj, "output\rakudo-star-${RAKUDO_VER}-win-x86_64-(JIT).wixpdb"
   Remove-Item -Recurse -Force "rakudo-${RAKUDO_VER}"
   Remove-Item -Recurse -Force $PrefixPath
+  Remove-Item RAKUDO-${RAKUDO_VER}_build.log
   Write-Host "   INFO - ALL done in dir `"", (pwd).Path, "`""
 }
 
