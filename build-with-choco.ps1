@@ -40,11 +40,11 @@ IF ((( & cl /v 2>&1 | Select-String "^Microsoft .+ Compiler Version .+ for") -ma
 Write-Host "   INFO - Checking all prerequisites (choco, git, perl5, WiX toolset, gpg) and installing them, if required"
 IF ( -NOT ((Get-Command "choco" -ErrorAction SilentlyContinue).Path) ) { iex (New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1') }
 # Now install all prerequisites to build NQP, Moar and finally Rakudo
-IF (  -NOT ((Get-Command  "git.exe" -ErrorAction SilentlyContinue).Path) ) { & choco install --yes --force --no-progress --timeout 0 git }
-IF (  -NOT ((Get-Command  "curl.exe" -ErrorAction SilentlyContinue).Path) ) { & choco install --yes --force --no-progress --timeout 0 curl }
-IF (  -NOT ((Get-Command "perl.exe" -ErrorAction SilentlyContinue).Path) ) { & choco install --yes --force --no-progress --timeout 0 perl }
-IF ( (-NOT ((Get-Command "heat.exe" -ErrorAction SilentlyContinue).Path)) -OR (-NOT ((Get-Command "candle.exe" -ErrorAction SilentlyContinue).Path)) ) { & choco install --yes --force --no-progress --timeout 0 wixtoolset }
-IF ( ($sign) -AND ( -NOT ((Get-Command "gpg.exe" -ErrorAction SilentlyContinue).Path) ) ) { & choco install --yes --force --no-progress --timeout 0 gpg4win-vanilla }
+IF (  -NOT ((Get-Command  "git.exe" -ErrorAction SilentlyContinue).Path) ) { & choco install --yes --force --no-progress --limit-output --timeout 0 git }
+IF (  -NOT ((Get-Command  "curl.exe" -ErrorAction SilentlyContinue).Path) ) { & choco install --yes --force --no-progress --limit-output --timeout 0 curl }
+IF (  -NOT ((Get-Command "perl.exe" -ErrorAction SilentlyContinue).Path) ) { & choco install --yes --force --no-progress --limit-output --timeout 0 perl }
+IF ( (-NOT ((Get-Command "heat.exe" -ErrorAction SilentlyContinue).Path)) -OR (-NOT ((Get-Command "candle.exe" -ErrorAction SilentlyContinue).Path)) ) { & choco install --yes --force --no-progress --limit-output --timeout 0 wixtoolset }
+IF ( ($sign) -AND ( -NOT ((Get-Command "gpg.exe" -ErrorAction SilentlyContinue).Path) ) ) { & choco install --yes --force --no-progress --limit-output --timeout 0 gpg4win-vanilla }
 
 # If no Rakudo release is given, build the latest from github
 IF ( -NOT ($RAKUDO_VER) ) {
