@@ -32,7 +32,8 @@ jobs:
       - name: Release Rakudo Star - Windows
         uses: ncipollo/release-action@v1
         with:
+          allowUpdates: true
+          artifactErrorsFailBuild: true
           artifacts: "output/*"
           # name: 2021.04 #only needed for dispatch builds
-        env:
           token: ${{ secrets.GITHUB_TOKEN }}
