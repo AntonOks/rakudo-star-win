@@ -12,7 +12,7 @@
 				Manufacturer="The Raku Community"
 				Description="Installs Rakudo Star $(var.STARVERSION)"
 				Keywords="Raku, Rakudo"
-				Comments="(c) 2020 The Raku Community"/>
+				Comments="(c) 2021 The Raku Community"/>
 		<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
 		
 		<!-- Installation Path as given by user in the prompt -->
