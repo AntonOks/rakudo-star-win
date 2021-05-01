@@ -44,7 +44,8 @@ They are all available in [windows-latest](https://github.com/actions/virtual-en
 
 # As a GitHub Action workflow
 * Create a tag, which needs to be the same as on [RAKUDO](https://github.com/rakudo/rakudo/) and push it to this repo
-  * `git tag -a 2021.04 -m 'Following the same https://github.com/rakudo/rakudo/ release`
+  * `git tag -a 2021.04 -m 'Following the https://github.com/rakudo/rakudo/ release cycle'`
   * `git push --tags`
-  * You can now watch the `Actions` tab in your GitHub repo and after some time there should be a new release published
+  * You can now watch the build in the `Actions` tab in your GitHub repo
+  * After some time there should be a new release published
 
