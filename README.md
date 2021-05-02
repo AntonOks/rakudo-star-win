@@ -14,11 +14,12 @@ Some reasons may be:
 * The script takes also care for all the required dependencies and assures everything is installed. It uses [the choco tool](https://chocolatey.org/) for this, mainly because choco is already included in the [windows-latest](https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md) GitHub container.
 
 ## Prerequisites:
-* A similar tag / branch to the version we want to build has to exist on https://github.com/rakudo/rakudo.git
-  * In example `2021.04`
+* __The exctly same tag__, as the release we want to build here, has to pre-exist on https://github.com/rakudo/rakudo/tags
+  * For example it may be something like `2021.04` or `2021.02.1`
 
-* `Microsoft Visual C++ 2019`
+* [`Microsoft Visual C++ 2019`](https://visualstudio.microsoft.com/de/vs/community/)
   * _YOU_ need to install it on your Windows system before you can run `build-with-choco.ps1` locally!
+    * To do so, use i.e. either [`vs_community`](https://aka.ms/vs/16/release/vs_community.exe) or [`vs_buildtools`](https://aka.ms/vs/16/release/vs_buildtools.exe) or just use choco by running `choco install visualstudio2019community`
 
 ### The following requirements are managed by the script.
 They are all available in [windows-latest](https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md)
@@ -38,9 +39,9 @@ They are all available in [windows-latest](https://github.com/actions/virtual-en
   * `.\build-with-choco.ps1 [YYYY.MM] -sign`
 
 ## Output
-* rakudo-star-YYYY.MM-[XY-]win-x86_64-(JIT).msi
-* rakudo-star-YYYY.MM-[XY-]win-x86_64-(JIT).msi.sha256.txt
-* rakudo-star-YYYY.MM-[XY-]win-x86_64-(JIT).msi.asc (optional with the `-sign` option)
+* rakudo-star-YYYY.MM-[X-]win-x86_64-(JIT).msi
+* rakudo-star-YYYY.MM-[X-]win-x86_64-(JIT).msi.sha256.txt
+* rakudo-star-YYYY.MM-[X-]win-x86_64-(JIT).msi.asc (optional with the `-sign` option)
 
 # As a GitHub Action workflow
 * Create a tag, which needs to be the same as on [RAKUDO](https://github.com/rakudo/rakudo/) and push it to this repo
