@@ -65,7 +65,8 @@ cd rakudo-$RAKUDO_VER
 $PrefixPath = $env:Temp + "\rakudo-star-$RAKUDO_VER"
 Write-Host "   INFO - `"`$PrefixPath`" set to $PrefixPath"
 Write-Host "   INFO - Building NQP, Moar and Rakudo $RAKUDO_VER"
-perl Configure.pl --backends=moar --gen-moar --gen-nqp --moar-option='--toolchain=msvc' --relocatable --prefix=$PrefixPath --out=RAKUDO-${RAKUDO_VER}_build.log
+# "Configure.pl" help -> https://github.com/rakudo/rakudo/blob/master/Configure.pl#L140-L210
+perl Configure.pl --backends=moar --gen-moar --gen-nqp --moar-option='--toolchain=msvc' --no-silent-build --relocatable --prefix=$PrefixPath --out=RAKUDO-${RAKUDO_VER}_build.log
 
 # see https://docs.microsoft.com/en-us/cpp/build/reference/running-nmake
 ## /C => Suppresses default output, including nonfatal NMAKE errors or warnings, timestamps, and NMAKE copyright message. Suppresses warnings issued by /K
